@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f766e">
+  <title>Trainingsplaner</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg viewBox="0 0 64 64" class="logo" aria-hidden="true"><rect x="8" y="20" width="8" height="24" rx="2"/><rect x="16" y="24" width="6" height="16" rx="2"/><rect x="22" y="29" width="20" height="6" rx="2"/><rect x="42" y="24" width="6" height="16" rx="2"/><rect x="48" y="20" width="8" height="24" rx="2"/></svg>
+      <h1>Trainingsplaner</h1>
+    </div>
+    <div class="plan-controls">
+      <label class="sr-only" for="planSelect">Trainingsplan</label>
+      <select id="planSelect"></select>
+      <button class="btn ghost" id="newPlanBtn" title="Neuer Plan">＋ Plan</button>
+      <button class="btn ghost" id="menuBtn" aria-haspopup="true" aria-expanded="false" title="Mehr">⋯</button>
+      <div class="menu" id="menu" hidden>
+        <button data-action="rename">Plan umbenennen</button>
+        <button data-action="duplicate">Plan duplizieren</button>
+        <button data-action="print">Drucken / PDF</button>
+        <button data-action="export">Exportieren (JSON)</button>
+        <button data-action="import">Importieren (JSON)</button>
+        <button data-action="delete" class="danger">Plan löschen</button>
+      </div>
+      <input type="file" id="importFile" accept="application/json" hidden>
+    </div>
+  </header>
+
+  <main>
+    <section class="summary" id="summary"></section>
+    <section id="days" class="days"></section>
+    <button class="btn add-day" id="addDayBtn">＋ Trainingstag hinzufügen</button>
+  </main>
+
+  <!-- Übungsbibliothek -->
+  <dialog id="library" class="sheet">
+    <div class="sheet-head">
+      <div>
+        <h2 id="libTitle">Übung hinzufügen</h2>
+        <p class="muted" id="libSubtitle"></p>
+      </div>
+      <button class="icon-btn" data-close aria-label="Schließen">✕</button>
+    </div>
+
+    <div id="libBrowse">
+      <input type="search" id="search" placeholder="Übung suchen …" autocomplete="off">
+      <h3 class="label">Gerät</h3>
+      <div class="equip-grid" id="equipGrid"></div>
+      <h3 class="label">Muskelgruppe</h3>
+      <div class="chips" id="muscleChips"></div>
+      <div class="ex-grid" id="exGrid"></div>
+    </div>
+
+    <form id="libConfig" hidden>
+      <div class="config-preview" id="configPreview"></div>
+      <div class="config-fields">
+        <div class="field">
+          <span class="label">Sätze</span>
+          <div class="stepper" data-field="sets">
+            <button type="button" data-step="-1" aria-label="Weniger Sätze">−</button>
+            <output>3</output>
+            <button type="button" data-step="1" aria-label="Mehr Sätze">＋</button>
+          </div>
+          <div class="quick" data-for="sets"></div>
+        </div>
+        <div class="field">
+          <span class="label">Wiederholungen</span>
+          <div class="stepper" data-field="reps">
+            <button type="button" data-step="-1" aria-label="Weniger Wiederholungen">−</button>
+            <output>10</output>
+            <button type="button" data-step="1" aria-label="Mehr Wiederholungen">＋</button>
+          </div>
+          <div class="quick" data-for="reps"></div>
+        </div>
+        <div class="field-row">
+          <label class="field">
+            <span class="label">Gewicht (kg)</span>
+            <input type="number" id="cfgWeight" min="0" step="0.5" inputmode="decimal" placeholder="optional">
+          </label>
+          <label class="field">
+            <span class="label">Pause (Sek.)</span>
+            <input type="number" id="cfgRest" min="0" step="15" inputmode="numeric" value="90">
+          </label>
+        </div>
+        <label class="field">
+          <span class="label">Notiz</span>
+          <input type="text" id="cfgNote" maxlength="120" placeholder="z. B. langsam absenken">
+        </label>
+      </div>
+      <div class="config-actions">
+        <button type="button" class="btn ghost" id="backBtn">← Zurück</button>
+        <button type="submit" class="btn primary" id="saveExBtn">Hinzufügen</button>
+      </div>
+    </form>
+  </dialog>
+
+  <template id="dayTpl">
+    <article class="day">
+      <header class="day-head">
+        <input class="day-name" aria-label="Name des Trainingstags">
+        <span class="day-meta muted"></span>
+        <button class="icon-btn" data-act="delete-day" title="Tag löschen" aria-label="Tag löschen">🗑</button>
+      </header>
+      <ol class="ex-list"></ol>
+      <button class="btn add-ex">＋ Übung hinzufügen</button>
+    </article>
+  </template>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
